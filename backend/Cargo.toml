@@ -1,0 +1,12 @@
+[package]
+name = "backend"
+version = "0.1.0"
+authors = ["Tiffany Bennett <tiffany@stormbit.net>"]
+
+[dependencies]
+atom_syndication = "0.5"
+chrono = "0.4"
+
+[dependencies.rusqlite]
+version = "0.13.0"
+features = [ "bundled" ]

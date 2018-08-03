@@ -1,0 +1,14 @@
+{
+  "extends": [],
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts"
+    ]
+  },
+  "rules": {
+    "interface-over-type-literal": false,
+    "member-access": [true, "no-public"],
+    "max-classes-per-file": false
+  }
+}

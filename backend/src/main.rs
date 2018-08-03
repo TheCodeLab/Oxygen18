@@ -166,7 +166,6 @@ enum RequestBody {
 #[derive(Deserialize)]
 struct Request {
     id: u64,
-    #[serde(flatten)]
     body: RequestBody,
 }
 
@@ -184,7 +183,9 @@ struct FeedEntry {
 #[serde(tag = "type")]
 enum ResponseBody {
     Success,
-    Error(String),
+    Error {
+        error: String,
+    },
     FeedEntries {
         list: Vec<FeedEntry>,
     }
@@ -193,7 +194,6 @@ enum ResponseBody {
 #[derive(Serialize)]
 struct Response {
     id: u64,
-    #[serde(flatten)]
     body: ResponseBody,
 }
 
@@ -269,7 +269,9 @@ fn server() {
                             Err(e) => {
                                 let response = Response {
                                     id: message.id,
-                                    body: ResponseBody::Error(e),
+                                    body: ResponseBody::Error {
+                                        error: e
+                                    },
                                 };
                                 let response = serde_json::to_string_pretty(&response).unwrap();
                                 sender.send_message(&OwnedMessage::Text(response)).unwrap();

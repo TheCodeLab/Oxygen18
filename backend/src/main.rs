@@ -153,7 +153,7 @@ fn print_latest() {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 #[serde(tag = "type")]
 enum RequestBody {
     GetLatest {
@@ -163,13 +163,13 @@ enum RequestBody {
     },
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct Request {
     id: u64,
     body: RequestBody,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 struct FeedEntry {
     feed_id: i64,
     title: String,
@@ -179,7 +179,7 @@ struct FeedEntry {
     content: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 #[serde(tag = "type")]
 enum ResponseBody {
     Success,
@@ -191,7 +191,7 @@ enum ResponseBody {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 struct Response {
     id: u64,
     body: ResponseBody,
@@ -249,20 +249,25 @@ fn server() {
                         let message = OwnedMessage::Pong(ping);
                         sender.send_message(&message).unwrap();
                     }
+                    OwnedMessage::Binary(_) => {
+                        println!("Unknown binary message from {}", ip);
+                    }
                     OwnedMessage::Text(message) => {
                         let message: Request = match serde_json::from_str(&message[..]) {
                             Ok(message) => message,
                             Err(e) => {
-                                println!("Parsing message failed: {}", e);
+                                println!("Parsing message failed: {}\nMessage: {}", e, message);
                                 continue;
                             }
                         };
+                        println!("[Request from {}]: {:#?}", ip, message);
                         match process_request(message.body) {
                             Ok(body) => {
                                 let response = Response {
                                     id: message.id,
                                     body: body,
                                 };
+                                println!("[Response to {}]: {:#?}", ip, response);
                                 let response = serde_json::to_string_pretty(&response).unwrap();
                                 sender.send_message(&OwnedMessage::Text(response)).unwrap();
                             },

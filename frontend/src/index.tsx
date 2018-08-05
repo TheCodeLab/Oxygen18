@@ -4,15 +4,28 @@ import './index.css';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore } from 'redux';
-import Action from './actions';
-import { reducer, State } from './reducers';
+import reducer from './reducers';
 import { Provider } from 'react-redux';
+import Connection from './Connection';
+import ConnectionContext from './ConnectionContext';
+import getLatest from './thunks/getLatest';
 
-const store = createStore<State, Action, {}, {}>(reducer);
+const enhancer = window['devToolsExtension'] ? window['devToolsExtension']()(createStore) : createStore;
+const store = enhancer(
+    reducer
+);
+
+const conn = new Connection('ws://localhost:2794');
+
+conn.onOpen().then(() => {
+    getLatest(store.dispatch, conn);
+})
 
 const element =
     <Provider store={store}>
-        <App />
+        <ConnectionContext.Provider value={conn}>
+            <App />
+        </ConnectionContext.Provider>
     </Provider>;
 
 render(element, document.getElementById('root'));

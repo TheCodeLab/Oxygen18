@@ -119,6 +119,30 @@ fn sync() {
     }
 }
 
+#[derive(Serialize, Debug)]
+struct FeedDesc {
+    id: i64,
+    last_update: i64,
+    title: String,
+    url: String,
+}
+
+fn get_feeds() -> Vec<FeedDesc> {
+    let conn = Connection::open("AtomReader.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("SELECT id, lastUpdate, title, url FROM feeds ORDER BY id DESC").unwrap();
+    let result = stmt.query_map(&[], |row| {
+        FeedDesc {
+            id: row.get(0),
+            last_update: row.get(1),
+            title: row.get(2),
+            url: row.get(3),
+        }
+    }).unwrap().map(|r| r.unwrap()).collect::<Vec<FeedDesc>>();
+
+    result
+}
+
 fn get_latest() -> Vec<FeedEntry> {
     let conn = Connection::open("AtomReader.sqlite").unwrap();
 
@@ -156,8 +180,8 @@ fn print_latest() {
 #[derive(Deserialize, Debug)]
 #[serde(tag = "type")]
 enum RequestBody {
-    GetLatest {
-    },
+    GetLatest {},
+    GetFeedList {},
     AddFeed {
         url: String,
     },
@@ -188,7 +212,10 @@ enum ResponseBody {
     },
     FeedEntries {
         list: Vec<FeedEntry>,
-    }
+    },
+    FeedList {
+        list: Vec<FeedDesc>,
+    },
 }
 
 #[derive(Serialize, Debug)]
@@ -202,6 +229,11 @@ fn process_request(request: RequestBody) -> Result<ResponseBody, String> {
         RequestBody::GetLatest {} => {
             Ok(ResponseBody::FeedEntries {
                 list: get_latest(),
+            })
+        },
+        RequestBody::GetFeedList {} => {
+            Ok(ResponseBody::FeedList {
+                list: get_feeds(),
             })
         },
         RequestBody::AddFeed { url } => {

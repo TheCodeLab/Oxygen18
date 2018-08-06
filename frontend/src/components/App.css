@@ -1,11 +1,26 @@
 .App {
   text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-auto-rows: 48px 1fr;
 }
 
 .App-header {
   background-color: #222;
   padding: 5px;
   color: white;
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+.App-sidebar {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.App-content {
+  grid-column: 2;
+  grid-row: 2;
 }
 
 .App-title {

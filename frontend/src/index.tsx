@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import Connection from './Connection';
 import ConnectionContext from './ConnectionContext';
 import getLatest from './thunks/getLatest';
+import getFeeds from './thunks/getFeeds';
 
 const enhancer = window['devToolsExtension'] ? window['devToolsExtension']()(createStore) : createStore;
 const store = enhancer(
@@ -19,6 +20,7 @@ const conn = new Connection('ws://localhost:2794');
 
 conn.onOpen().then(() => {
     getLatest(store.dispatch, conn);
+    getFeeds(store.dispatch, conn);
 })
 
 const element =

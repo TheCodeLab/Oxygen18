@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import './App.css';
 import LatestEntryList from './LatestEntryList';
+import CurrentFeedList from './CurrentFeedList';
 
 class App extends Component {
   render() {
@@ -10,7 +11,12 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Atom Reader</h1>
         </header>
-        <LatestEntryList />
+        <div className="App-sidebar">
+          <CurrentFeedList />
+        </div>
+        <div className="App-content">
+          <LatestEntryList />
+        </div>
       </div>
     );
   }

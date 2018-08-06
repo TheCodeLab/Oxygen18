@@ -1,11 +1,17 @@
 export type GetLatestRequest = {
     type: 'GetLatest',
 };
+export type GetFeedsRequest = {
+    type: 'GetFeedList',
+};
 export type AddFeedRequest = {
     type: 'AddFeed',
     url: string,
 };
-export type RequestBody = GetLatestRequest | AddFeedRequest;
+export type RequestBody =
+    GetLatestRequest |
+    GetFeedsRequest |
+    AddFeedRequest;
 
 export type RequestMessage = {
     id: number,
@@ -21,6 +27,13 @@ export type FeedEntry = {
     content: string,
 };
 
+export type Feed = {
+    id: number,
+    last_update: number,
+    title: string,
+    url: string,
+};
+
 export type SuccessResponse = {
     type: 'Success',
 };
@@ -32,7 +45,15 @@ export type FeedEntriesResponse = {
     type: 'FeedEntries',
     list: FeedEntry[],
 };
-export type ResponseBody = SuccessResponse | ErrorResponse | FeedEntriesResponse;
+export type FeedListResponse = {
+    type: 'FeedList',
+    list: Feed[],
+};
+export type ResponseBody =
+    SuccessResponse |
+    ErrorResponse |
+    FeedEntriesResponse |
+    FeedListResponse;
 
 export type ResponseMessage = {
     id: number,
@@ -136,7 +157,20 @@ export default class Connection {
                 return response.list;
             }
             else {
-                throw new Error(`Expected FeedEntries response, got ${response.type}`);
+                throw new ConnectionError(`Expected FeedEntries response, got ${response.type}`);
+            }
+        });
+    }
+
+    getFeeds(): Promise<Feed[]> {
+        return this._request({
+            type: 'GetFeedList',
+        }).then((response) => {
+            if (response.type == 'FeedList') {
+                return response.list;
+            }
+            else {
+                throw new ConnectionError(`Expected FeedList response, got ${response.type}`);
             }
         });
     }

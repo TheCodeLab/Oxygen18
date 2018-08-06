@@ -1,9 +1,10 @@
 import Action from '../actions';
-import { FeedEntry } from '../Connection';
+import { FeedEntry, Feed } from '../Connection';
 import { combineReducers } from 'redux';
 
 export type State = {
     feedEntries: FeedEntry[],
+    feeds: Feed[],
 };
 
 function feedEntries(state: FeedEntry[], action: Action): FeedEntry[] {
@@ -14,6 +15,15 @@ function feedEntries(state: FeedEntry[], action: Action): FeedEntry[] {
     return state || [];
 }
 
+function feeds(state: Feed[], action: Action): Feed[] {
+    if (action.type == 'AddFeedList') {
+        return action.feeds;
+    }
+
+    return state || [];
+}
+
 export default combineReducers<State, Action>({
     feedEntries,
+    feeds
 })

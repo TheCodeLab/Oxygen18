@@ -1,0 +1,27 @@
+.SafeHtmlDoc-code {
+  font: monospace;
+  font-size: 1em;
+  color: #000000;
+  background: rgb(240, 240, 235);
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+.SafeHtmlDoc-h2 {
+  font-size: 1.25em;
+  font-weight: 500;
+  color: #444;
+}
+
+.SafeHtmlDoc-a {
+  color: #444491;
+}
+
+.SafeHtmlDoc-a:hover {
+  color: #7171c9;
+}
+
+.SafeHtmlDoc-a:visited {
+  color: #231c2e;
+}

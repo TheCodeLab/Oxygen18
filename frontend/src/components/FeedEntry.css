@@ -1,11 +1,11 @@
 .FeedEntry {
-    border: 1px solid grey;
-    text-align: left;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 4px;
+  border: 1px solid grey;
+  text-align: left;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 4px;
 }
 
 .FeedEntry-date {
-    color: grey;
+  color: grey;
 }

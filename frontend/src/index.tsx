@@ -13,22 +13,23 @@ import getFeeds from './thunks/getFeeds';
 
 const enhancer = window['devToolsExtension'] ? window['devToolsExtension']()(createStore) : createStore;
 const store = enhancer(
-    reducer
+  reducer
 );
 
 const conn = new Connection('ws://localhost:2794');
 
 conn.onOpen().then(() => {
-    getLatest(store.dispatch, conn);
-    getFeeds(store.dispatch, conn);
+  getLatest(store.dispatch, conn);
+  getFeeds(store.dispatch, conn);
 })
 
-const element =
-    <Provider store={store}>
-        <ConnectionContext.Provider value={conn}>
-            <App />
-        </ConnectionContext.Provider>
-    </Provider>;
+const element = (
+  <Provider store={store}>
+    <ConnectionContext.Provider value={conn}>
+      <App />
+    </ConnectionContext.Provider>
+  </Provider>
+);
 
 render(element, document.getElementById('root'));
 registerServiceWorker();

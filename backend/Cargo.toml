@@ -1,7 +1,7 @@
 [package]
-name = "backend"
+name = "oxygen18-backend"
 version = "0.1.0"
-authors = ["Tiffany Bennett <tiffany@stormbit.net>"]
+authors = ["Tiffany Bennett <tiffnixen@gmail.com>"]
 
 [dependencies]
 atom_syndication = "0.5"

@@ -34,7 +34,8 @@ fn create_db() {
             summary TEXT,
             content TEXT,
 
-            FOREIGN KEY(feedId) REFERENCES feeds(id)
+            FOREIGN KEY(feedId) REFERENCES feeds(id),
+            PRIMARY KEY(feedId, id)
         );
         CREATE INDEX IF NOT EXISTS feedsByDate ON feedEntries (updated DESC);
         COMMIT;"
@@ -69,7 +70,7 @@ fn update_feed(conn: &mut Connection, feed_id: i64, url: &str) {
             DateTime::parse_from_rfc3339(entry.updated())
             .map(|t| t.with_timezone::<Utc>(&Utc))
             .unwrap_or(now);
-        tx.execute("INSERT INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ? )", &[
+        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ? )", &[
             &feed_id,
             &entry.title(),
             &entry.id(),

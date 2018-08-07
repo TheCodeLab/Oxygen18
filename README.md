@@ -16,7 +16,7 @@ database instead of the XML file other readers usually use.
 
 ```sh
 cd backend/
-cargo run -- -server
+cargo run
 ```
 
 ```sh

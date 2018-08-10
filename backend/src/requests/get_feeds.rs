@@ -9,8 +9,8 @@ pub fn get_feeds(_request: GetFeedList, conn: &mut Connection) -> Result<Respons
     let result = stmt.query_map(&[], |row| {
         FeedDesc {
             id: row.get(0),
-            last_update: row.get(1),
-            title: row.get(2),
+            last_update: row.get::<i32, Option<i64>>(1).unwrap_or(0),
+            title: row.get::<i32, Option<String>>(2).unwrap_or(String::new()),
             url: row.get(3),
         }
     })?.collect::<Result<Vec<FeedDesc>, RusqliteError>>()?;

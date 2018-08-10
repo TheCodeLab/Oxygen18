@@ -13,3 +13,11 @@
   color: black;
   background-color: #eeeeee;
 }
+
+.FeedList-addNew:placeholder-shown {
+  color: grey;
+}
+
+.FeedList-addNew {
+  color: #3b89ff;
+}

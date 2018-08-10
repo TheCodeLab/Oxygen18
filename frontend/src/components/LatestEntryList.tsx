@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state: State): FeedEntryListProps => {
   return {
-    entries: state.feedEntries,
+    entries: state.feedEntries.filter((entry) =>
+      state.feedFilter == null || entry.feed_id == state.feedFilter),
   }
 };
 

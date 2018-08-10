@@ -19,7 +19,7 @@ const store = enhancer(
 const conn = new Connection('ws://localhost:2794');
 
 conn.onOpen().then(() => {
-  getLatest(store.dispatch, conn);
+  getLatest(store.dispatch, conn, 15, 0);
   getFeeds(store.dispatch, conn);
 })
 

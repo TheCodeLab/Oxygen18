@@ -1,5 +1,7 @@
 export type GetLatestRequest = {
   type: 'GetLatest',
+  num_entries: number,
+  offset: number|undefined,
 };
 export type GetFeedsRequest = {
   type: 'GetFeedList',
@@ -19,7 +21,7 @@ export type RequestMessage = {
 }
 
 export type FeedEntry = {
-  feedId: number,
+  feed_id: number,
   title: string,
   id: string,
   updated: number,
@@ -149,9 +151,11 @@ export default class Connection {
     }
   }
   
-  getLatest(): Promise<FeedEntry[]> {
+  getLatest(num_entries: number, offset: number|undefined): Promise<FeedEntry[]> {
     return this._request({
       type: 'GetLatest',
+      num_entries,
+      offset,
     }).then((response) => {
       if (response.type == 'FeedEntries') {
         return response.list;

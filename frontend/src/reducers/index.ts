@@ -5,6 +5,7 @@ import { combineReducers } from 'redux';
 export type State = {
   feedEntries: FeedEntry[],
   feeds: Feed[],
+  feedFilter: number|null,
 };
 
 function feedEntries(state: FeedEntry[], action: Action): FeedEntry[] {
@@ -23,7 +24,16 @@ function feeds(state: Feed[], action: Action): Feed[] {
   return state || [];
 }
 
+function feedFilter(state: number|null, action: Action): number|null {
+  if (action.type == 'SetFeedFilter') {
+    return action.feedId;
+  }
+
+  return state || null;
+}
+
 export default combineReducers<State, Action>({
   feedEntries,
-  feeds
+  feeds,
+  feedFilter,
 })

@@ -1,4 +1,15 @@
 .FeedList-feed {
-  margin: 4px;
+  text-align: left;
+  width: 100%;
+  padding: 9px;
+  border: none;
   border-bottom: 1px solid lightgrey;
+  background-color: white;
+  font-size: 0.9em;
+}
+
+.FeedList-feed:disabled {
+  font-weight: bold;
+  color: black;
+  background-color: #eeeeee;
 }

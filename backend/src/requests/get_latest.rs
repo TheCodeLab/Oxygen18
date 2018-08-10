@@ -3,12 +3,16 @@ use protocol::request::GetLatest;
 use protocol::{FeedEntry, Response};
 use super::Error;
 
-pub fn get_latest(_request: GetLatest, conn: &mut Connection) -> Result<Response, Error> {
-    let mut stmt = conn.prepare_cached(
-        "SELECT feedId, title, id, updated, summary, content FROM feedEntries ORDER BY updated DESC LIMIT 3"
+pub fn get_latest(request: GetLatest, conn: &mut Connection) -> Result<Response, Error> {
+    let mut stmt = conn.prepare_cached("
+        SELECT feedId, title, id, updated, summary, content
+        FROM feedEntries
+        WHERE (:filterFeed ISNULL OR feedId == :filterFeed)
+        ORDER BY updated DESC
+        LIMIT :limit OFFSET :offset"
     )?;
 
-    let result = stmt.query_map(&[], |row| {
+    let result = stmt.query_map(&[&request.feed_id, &request.num_entries, &request.offset], |row| {
         FeedEntry {
             feed_id: row.get(0),
             title: row.get(1),

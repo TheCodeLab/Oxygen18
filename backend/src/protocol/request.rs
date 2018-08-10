@@ -1,5 +1,10 @@
 #[derive(Deserialize, Debug)]
-pub struct GetLatest;
+pub struct GetLatest {
+    pub feed_id: Option<i64>,
+    #[serde(default)]
+    pub offset: i32,
+    pub num_entries: i32,
+}
 
 #[derive(Deserialize, Debug)]
 pub struct GetFeedList;

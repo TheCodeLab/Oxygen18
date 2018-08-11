@@ -7,6 +7,7 @@ extern crate atom_syndication;
 extern crate rusqlite;
 extern crate chrono;
 extern crate websocket;
+extern crate rss;
 
 mod protocol;
 mod requests;

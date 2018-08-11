@@ -14,3 +14,7 @@ serde_derive = "1.0"
 [dependencies.rusqlite]
 version = "0.13.0"
 features = [ "bundled" ]
+
+[dependencies.rss]
+version = "1.5.0"
+features = [ "from_url" ]

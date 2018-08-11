@@ -65,6 +65,9 @@ Returns an array of `FeedEntry` objects.
 ```js
 {
   type: 'GetLatest',
+  feed_id: integer?,
+  offset: integer?,
+  num_entries: integer,
 }
 ```
 

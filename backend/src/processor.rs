@@ -3,8 +3,44 @@ use rusqlite::Connection;
 use std::io::BufReader;
 use std::fs::File;
 use atom_syndication::Feed;
+use rss::Channel;
 use std::time::Duration;
 use std::thread;
+
+fn update_rss(conn: &mut Connection, feed_id: i64, url: &str) -> Result<(), ::rss::Error> {
+    println!("updating rss: {}", url);
+    let now: DateTime<Utc> = Utc::now();
+
+    let channel = Channel::from_url(&url)?;
+    let tx = conn.transaction().unwrap();
+
+    for item in channel.items() {
+        let pub_date: DateTime<Utc> =
+            // TODO: What happens if there's no publication date for the item?
+            DateTime::parse_from_rfc2822(item.pub_date().unwrap())
+            .map(|t| t.with_timezone::<Utc>(&Utc))
+            .unwrap_or(now);
+        
+        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ? )", &[
+            &feed_id,
+            &item.title(),
+            &item.guid().unwrap().value(),
+            &pub_date.timestamp(),
+            &item.description().unwrap(),
+            &item.content().unwrap(),
+        ]).unwrap();
+    }
+
+    tx.execute("UPDATE feeds SET ( title, lastUpdate ) = ( ?, ? ) WHERE id = ?", &[
+        &channel.title(),
+        &Utc::now().timestamp(),
+        &feed_id,
+    ]).unwrap();
+
+    tx.commit().unwrap();
+
+    Ok(())
+}
 
 fn update_feed(conn: &mut Connection, feed_id: i64, url: &str) {
     println!("updating: {}", url);
@@ -71,7 +107,10 @@ fn sync() {
     for to_update in result {
         let cooldown = 30*60;
         if to_update.last_update + cooldown < now.timestamp() {
-            update_feed(&mut conn, to_update.id, &to_update.url[..]);
+            match update_rss(&mut conn, to_update.id, &to_update.url[..]) {
+                Err(_) => update_feed(&mut conn, to_update.id, &to_update.url[..]),
+                _ => {}
+            }
         }
     }
 }

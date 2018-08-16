@@ -8,6 +8,7 @@ extern crate rusqlite;
 extern crate chrono;
 extern crate websocket;
 extern crate rss;
+extern crate reqwest;
 
 mod protocol;
 mod requests;

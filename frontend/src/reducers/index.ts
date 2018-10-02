@@ -12,6 +12,18 @@ function feedEntries(state: FeedEntry[], action: Action): FeedEntry[] {
   if (action.type == 'AddFeedEntries') {
     return state.concat(action.entries);
   }
+  else if (action.type == 'MarkRead') {
+    return state.map((item, index) => {
+      if (item.row_id !== action.rowId) {
+        return item;
+      }
+
+      return {
+        ...item,
+        is_read: true,
+      };
+    })
+  }
   
   return state || [];
 }

@@ -8,6 +8,7 @@ pub struct FeedDesc {
 
 #[derive(Serialize, Debug)]
 pub struct FeedEntry {
+    pub row_id: i64,
     pub feed_id: i64,
     pub title: String,
     pub id: String,

@@ -14,6 +14,7 @@ mod protocol;
 mod requests;
 mod processor;
 mod server;
+mod migration;
 
 use rusqlite::Connection;
 
@@ -48,6 +49,11 @@ fn main() {
     use std::thread;
 
     create_db();
+
+    {
+        let mut conn = Connection::open("AtomReader.sqlite").unwrap();
+        migration::migrate_db(&mut conn).expect("couldn't migrate database");
+    }
 
     thread::spawn(processor::processor_thread);
     server::server_thread();

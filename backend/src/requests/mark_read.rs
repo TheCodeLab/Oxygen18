@@ -1,5 +1,5 @@
 use rusqlite::{Connection};
-use protocol::request::MarkAsRead;
+use protocol::request::MarkRead;
 use protocol::{Response};
 use super::Error;
 

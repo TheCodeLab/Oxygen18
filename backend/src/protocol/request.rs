@@ -15,11 +15,17 @@ pub struct AddFeed {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct MarkAsRead {
+    pub entry_id: i64,
+}
+
+#[derive(Deserialize, Debug)]
 #[serde(tag = "type")]
 pub enum Request {
     GetLatest(GetLatest),
     GetFeedList(GetFeedList),
     AddFeed(AddFeed),
+    MarkAsRead(MarkAsRead),
 }
 
 #[derive(Deserialize, Debug)]

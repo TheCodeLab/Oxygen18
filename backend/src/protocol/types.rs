@@ -15,4 +15,5 @@ pub struct FeedEntry {
     pub updated: i64,
     pub summary: String,
     pub content: String,
+    pub is_read: bool,
 }

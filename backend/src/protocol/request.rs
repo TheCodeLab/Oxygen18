@@ -15,7 +15,7 @@ pub struct AddFeed {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct MarkAsRead {
+pub struct MarkRead {
     pub entry_id: i64,
 }
 
@@ -25,7 +25,7 @@ pub enum Request {
     GetLatest(GetLatest),
     GetFeedList(GetFeedList),
     AddFeed(AddFeed),
-    MarkAsRead(MarkAsRead),
+    MarkRead(MarkRead),
 }
 
 #[derive(Deserialize, Debug)]

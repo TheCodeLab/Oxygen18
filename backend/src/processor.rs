@@ -63,13 +63,14 @@ fn process_atom_feed(tx: &Transaction, feed_id: i64, feed_body: &str) -> Result<
             DateTime::parse_from_rfc3339(entry.updated())
             .map(|t| t.with_timezone::<Utc>(&Utc))
             .unwrap_or(now);
-        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ? )", &[
+        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ?, ? )", &[
             &feed_id,
             &entry.title(),
             &entry.id(),
             &updated.timestamp(),
             &entry.summary(),
-            &entry.content().and_then(|x| x.value())
+            &entry.content().and_then(|x| x.value()),
+            &0
         ])?;
     }
 
@@ -87,13 +88,14 @@ fn process_rss_feed(tx: &Transaction, feed_id: i64, feed_body: &str) -> Result<S
             .map(|t| t.with_timezone::<Utc>(&Utc))
             .unwrap_or(now);
         
-        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ? )", &[
+        tx.execute("INSERT OR REPLACE INTO feedEntries VALUES ( ?, ?, ?, ?, ?, ?, ? )", &[
             &feed_id,
             &item.title(),
             &item.guid().unwrap().value(),
             &pub_date.timestamp(),
             &item.description().unwrap(),
             &item.content().unwrap(),
+            &0
         ])?;
     }
 

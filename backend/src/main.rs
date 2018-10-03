@@ -18,37 +18,8 @@ mod migration;
 
 use rusqlite::Connection;
 
-fn create_db() {
-    let conn = Connection::open("AtomReader.sqlite").unwrap();
-
-    conn.execute_batch(
-        "BEGIN;
-        CREATE TABLE IF NOT EXISTS feeds (
-            id INTEGER PRIMARY KEY,
-            url TEXT NOT NULL,
-            lastUpdate INTEGER,
-            title TEXT
-        );
-        CREATE TABLE IF NOT EXISTS feedEntries (
-            feedId INTEGER,
-            title TEXT,
-            id TEXT,
-            updated INTEGER NOT NULL,
-            summary TEXT,
-            content TEXT,
-
-            FOREIGN KEY(feedId) REFERENCES feeds(id),
-            PRIMARY KEY(feedId, id)
-        );
-        CREATE INDEX IF NOT EXISTS feedsByDate ON feedEntries (updated DESC);
-        COMMIT;"
-    ).unwrap();
-}
-
 fn main() {
     use std::thread;
-
-    create_db();
 
     {
         let mut conn = Connection::open("AtomReader.sqlite").unwrap();

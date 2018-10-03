@@ -7,6 +7,32 @@ fn get_schema_version(conn: &Connection) -> Result<i64, RusqliteError> {
 }
 
 fn migrate_1(tx: &Transaction) -> Result<(), RusqliteError> {
+	tx.execute_batch(
+        "SAVEPOINT migration_1;
+        CREATE TABLE IF NOT EXISTS feeds (
+            id INTEGER PRIMARY KEY,
+            url TEXT NOT NULL,
+            lastUpdate INTEGER,
+            title TEXT
+        );
+        CREATE TABLE IF NOT EXISTS feedEntries (
+            feedId INTEGER,
+            title TEXT,
+            id TEXT,
+            updated INTEGER NOT NULL,
+            summary TEXT,
+            content TEXT,
+
+            FOREIGN KEY(feedId) REFERENCES feeds(id),
+            PRIMARY KEY(feedId, id)
+        );
+        CREATE INDEX IF NOT EXISTS feedsByDate ON feedEntries (updated DESC);
+        RELEASE SAVEPOINT migration_1;"
+    )?;
+	Ok(())
+}
+
+fn migrate_2(tx: &Transaction) -> Result<(), RusqliteError> {
 	tx.execute("ALTER TABLE feedEntries ADD COLUMN isRead INTEGER DEFAULT 0;", &[])?;
 	Ok(())
 }
@@ -17,12 +43,18 @@ pub fn migrate_db(conn: &mut Connection) -> Result<(), RusqliteError> {
 	// Fn types cannot be shared between threads safely.
 	let migrations: Vec<&Fn(&Transaction) -> Result<(), RusqliteError>> = vec![
 		&migrate_1,
+		&migrate_2,
 	];
 
 	let schema_version = get_schema_version(conn)? as usize;
 	let current_version = migrations.len();
 
+	// Schema versions start at 1
+	// A schema version of 0, as reported by get_schema_version, means the
+	// database is brand new
 	for migration_version in (schema_version + 1)..=current_version {
+		// But Vecs are indexed starting at 0, so we have to subtract 1 from the
+		// migration version to get the migration function.
 		let migration = migrations[migration_version - 1];
 		let tx = conn.transaction()?;
 		migration(&tx)?;

@@ -13,8 +13,12 @@ pub fn set_read(request: SetRead, conn: &mut Connection) -> Result<Response, Err
 		0
 	};
 
-	for entry_id in request.entry_ids {
-		tx.execute("UPDATE feedEntries SET isRead = ? WHERE rowid = ?;", &[&entry_id, &read_int])?;
+	{
+		let mut stmt = tx.prepare_cached("UPDATE feedEntries SET isRead = ? WHERE rowid = ?;")?;
+
+		for entry_id in request.entry_ids {
+			stmt.execute(&[&entry_id, &read_int])?;
+		}
 	}
 
 	tx.commit()?;

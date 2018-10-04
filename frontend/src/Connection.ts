@@ -10,15 +10,16 @@ export type AddFeedRequest = {
   type: 'AddFeed',
   url: string,
 };
-export type MarkReadRequest = {
-  type: 'MarkRead',
-  entry_id: number,
+export type SetReadRequest = {
+  type: 'SetRead',
+  entry_ids: number[],
+  is_read: boolean,
 }
 export type RequestBody =
 GetLatestRequest |
 GetFeedsRequest |
 AddFeedRequest |
-MarkReadRequest;
+SetReadRequest;
 
 export type RequestMessage = {
   id: number,
@@ -195,10 +196,11 @@ export default class Connection {
     })
   }
 
-  markRead(rowId: number): Promise<void> {
+  setRead(entryIds: number[], isRead: boolean): Promise<void> {
     return this._request({
-      type: 'MarkRead',
-      entry_id: rowId,
+      type: 'SetRead',
+      entry_ids: entryIds,
+      is_read: isRead,
     }).then((_response) => {
       return;
     })

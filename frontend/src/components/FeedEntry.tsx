@@ -5,17 +5,12 @@ import SafeHtmlDoc from './SafeHtmlDoc';
 
 export type FeedEntryProps = {
   entry: FeedEntry,
-  markRead: (entryId: number) => void,
+  setRead: (entryId: number, read: boolean) => void,
 }
 
 class FeedEntryView extends React.Component<FeedEntryProps> {
-  constructor(props: FeedEntryProps) {
-    super(props);
-    this.markRead = this.markRead.bind(this);
-  }
-
-  markRead(e: React.MouseEvent) {
-    this.props.markRead(this.props.entry.row_id);
+  markRead = () => {
+    this.props.setRead(this.props.entry.row_id, !this.props.entry.is_read);
   }
 
   render() {

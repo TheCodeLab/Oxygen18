@@ -3,7 +3,7 @@ import { State } from "../reducers";
 import FeedEntryList, { FeedEntryListPropState, FeedEntryListPropDispatch } from "./FeedEntryList";
 import { connect } from 'react-redux';
 import { Dispatch } from "redux";
-import markRead from "../thunks/markRead";
+import setRead from "../thunks/setRead";
 import Connection from "../Connection";
 import ConnectionContext from "../ConnectionContext";
 
@@ -16,8 +16,8 @@ const mapStateToProps = (state: State): FeedEntryListPropState => {
 
 const mapDispatchToProps = (dispatch: Dispatch): FeedEntryListPropDispatch => {
   return {
-    markRead: (feed_id: number, conn: Connection) => {
-      markRead(dispatch, conn, feed_id);
+    setRead: (entryId: number, isRead: boolean, conn: Connection) => {
+      setRead(dispatch, conn, [entryId], isRead);
     }
   }
 }

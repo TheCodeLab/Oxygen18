@@ -7,26 +7,21 @@ export type FeedEntryListPropState = {
 }
 
 export type FeedEntryListPropDispatch = {
-  markRead: (entryId: number, conn: Connection) => void,
+  setRead: (entryId: number, isRead: boolean, conn: Connection) => void,
 }
 
 export type FeedEntryListProps = FeedEntryListPropState & FeedEntryListPropDispatch & { conn: Connection };
 
 class FeedEntryList extends React.Component<FeedEntryListProps> {
-  constructor(props: FeedEntryListProps) {
-    super(props);
-    this.markRead = this.markRead.bind(this);
-  }
-
-  markRead(entryId: number) {
-    this.props.markRead(entryId, this.props.conn);
+  setRead = (entryId: number, isRead: boolean) => {
+    this.props.setRead(entryId, isRead, this.props.conn);
   }
 
   render() {
     return (
       <div>
         {this.props.entries.map((entry: FeedEntry, index: number) =>
-          <FeedEntryView key={index} entry={entry} markRead={this.markRead} />
+          <FeedEntryView key={index} entry={entry} setRead={this.setRead} />
         )}
       </div>
     );

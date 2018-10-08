@@ -9,3 +9,7 @@
 .FeedEntry-date {
   color: grey;
 }
+
+.FeedEntry-read {
+  background-color: #EFEFEF;
+}

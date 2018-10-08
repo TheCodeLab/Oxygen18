@@ -4,6 +4,7 @@ use protocol::{Request, Response};
 mod get_latest;
 mod add_feed;
 mod get_feeds;
+mod set_read;
 
 #[derive(Debug)]
 pub enum Error {
@@ -21,5 +22,6 @@ pub fn process(request: Request, conn: &mut Connection) -> Result<Response, Erro
         Request::GetLatest(request) => get_latest::get_latest(request, conn),
         Request::AddFeed(request) => add_feed::add_feed(request, conn),
         Request::GetFeedList(request) => get_feeds::get_feeds(request, conn),
+        Request::SetRead(request) => set_read::set_read(request, conn),
     }
 }
